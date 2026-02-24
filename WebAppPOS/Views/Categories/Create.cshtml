@@ -1,0 +1,45 @@
+﻿@model WebAppPOS.Models.Category
+@{
+    ViewData["Title"] = "Create";}
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="row mb-3">
+        <label asp-for="CategoryName" class="col-sm-3">Category Name</label>
+        <div class="col-sm-9">
+            <input type="text" asp-for="CategoryName" class="form-control" id="category_name" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label asp-for="FileImage" class="col-sm-3">Image</label>
+        <div class="col-sm-9">
+            <input type="file" asp-for="FileImage" class="form-control" accept="image/*" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label asp-for="Description" class="col-sm-3">Description</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" asp-for="Description" rows="5" cols="5"></textarea>
+        </div>
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary" name="btn" />
+</form>
+@* <form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="row mb-3">
+        <label for="category_name" class="col-sm-3">Category Name</label>
+        <div class="col-sm-9">
+            <input type="text" name="category_name" class="form-control" id="category_name" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="image" class="col-sm-3">Image</label>
+        <div class="col-sm-9">
+            <input type="file" name="image" class="form-control" id="image" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="descripton" class="col-sm-3">Description</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" name="description" rows="5" cols="5"></textarea>
+        </div>
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary" name="btn" />
+</form> *@

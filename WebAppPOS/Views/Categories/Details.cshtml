@@ -1,0 +1,14 @@
+﻿@model WebAppPOS.Models.Category
+@{
+    ViewData["Title"] = "Details";
+}
+<h1>Details</h1>
+<div>
+    <h3>Category Detail</h3>
+    <ul>
+        <li><strong>Category Name: @Html.DisplayFor(c => c.CategoryName)</strong></li>
+        <li><strong>Category Name: @Model.CategoryName</strong></li>
+        <li><strong>Description: @Model.Description</strong></li>
+        <li><img src="@Html.DisplayFor(modelItem => @Model.ImageUrl)" height="60" width="60" /></li>
+</ul>
+</div>

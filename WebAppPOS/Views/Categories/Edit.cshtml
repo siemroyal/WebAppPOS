@@ -1,0 +1,27 @@
+﻿@model WebAppPOS.Models.Category
+@{
+    ViewData["Title"] = "Create";
+}
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="CategoryId" />
+    <div class="row mb-3">
+        <label asp-for="CategoryName" class="col-sm-3">Category Name</label>
+        <div class="col-sm-9">
+            <input type="text" asp-for="CategoryName" class="form-control" id="category_name" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label asp-for="ImageUrl" class="col-sm-3">Image</label>
+        <div class="col-sm-9">
+            <input type="file" asp-for="ImageUrl" class="form-control" accept="image/*" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label asp-for="Description" class="col-sm-3">Description</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" asp-for="Description" rows="5" cols="5"></textarea>
+        </div>
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary" name="btn" />
+</form>

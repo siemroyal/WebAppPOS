@@ -1,0 +1,14 @@
+﻿@model IEnumerable<WebAppPOS.Models.Unit>
+@if (Model.Any <Unit>()){
+    @foreach (var unit in Model)
+    {
+        @unit.UnitName
+        @unit.Description
+    }
+}
+else
+{
+    <h2>No Units Available</h2>
+}
+
+
