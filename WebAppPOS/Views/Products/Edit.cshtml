@@ -1,0 +1,279 @@
+﻿@model WebAppPOS.Models.Product
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<!-- Load Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            
+            <!-- Header Section -->
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h2 class="fw-bold text-slate-800 mb-1">Update Product</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none text-primary">Products</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Create</li>
+                        </ol>
+                    </nav>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Back to List
+                </a>
+            </div>
+
+            <!-- Main Form Card -->
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <form asp-action="Edit" enctype="multipart/form-data" id="productForm">
+                    @* <input type="hidden" asp-for="Id" name="id" /> *@
+                    <div class="card-body p-4 p-md-5">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
+
+                        <div class="row g-5">
+                            <!-- LEFT COLUMN: Product Details -->
+                            <div class="col-lg-8">
+                                <div class="section-title mb-4">
+                                    <h5 class="fw-bold text-dark"><i class="bi bi-info-circle me-2 text-primary"></i>General Information</h5>
+                                    <hr class="text-secondary opacity-25">
+                                </div>
+
+                                <div class="row g-3">
+                                    <!-- Name -->
+                                    <div class="col-md-8">
+                                        <label asp-for="ProductName" class="form-label fw-bold small text-muted text-uppercase">Product Name</label>
+                                        <input asp-for="ProductName" class="form-control form-control-lg shadow-none" placeholder="Enter product name..." />
+                                        <span asp-validation-for="ProductName" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Code -->
+                                    <div class="col-md-4">
+                                        <label asp-for="ProductCode" class="form-label fw-bold small text-muted text-uppercase">Product Code</label>
+                                        <input asp-for="ProductCode" class="form-control form-control-lg shadow-none" placeholder="P-1001" />
+                                        <span asp-validation-for="ProductCode" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Category -->
+                                    <div class="col-md-6 mt-4">
+                                        <label asp-for="CategoryId" class="form-label fw-bold small text-muted text-uppercase">Category</label>
+                                        <select asp-for="CategoryId" class="form-select shadow-none" asp-items="ViewBag.CategoryId">
+                                            <option value="">-- Choose Category --</option>
+                                        </select>
+                                        <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Unit -->
+                                    <div class="col-md-6 mt-4">
+                                        <label asp-for="UnitId" class="form-label fw-bold small text-muted text-uppercase">Unit of Measure</label>
+                                        <select asp-for="UnitId" class="form-select shadow-none" asp-items="ViewBag.UnitId">
+                                            <option value="">-- Choose Unit --</option>
+                                        </select>
+                                        <span asp-validation-for="UnitId" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="section-title mt-5 mb-3">
+                                        <h5 class="fw-bold text-dark"><i class="bi bi-currency-dollar me-2 text-primary"></i>Pricing & Inventory</h5>
+                                        <hr class="text-secondary opacity-25">
+                                    </div>
+
+                                    <!-- Cost -->
+                                    <div class="col-md-4">
+                                        <label asp-for="Cost" class="form-label fw-bold small text-muted text-uppercase">Cost Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted border-end-0">$</span>
+                                            <input asp-for="Cost" type="number" step="0.01" class="form-control border-start-0 shadow-none" placeholder="0.00" />
+                                        </div>
+                                        <span asp-validation-for="Cost" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Price -->
+                                    <div class="col-md-4">
+                                        <label asp-for="Price" class="form-label fw-bold small text-muted text-uppercase">Selling Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted border-end-0">$</span>
+                                            <input asp-for="Price" type="number" step="0.01" class="form-control border-start-0 shadow-none" placeholder="0.00" />
+                                        </div>
+                                        <span asp-validation-for="Price" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Stock -->
+                                    <div class="col-md-4">
+                                        <label asp-for="StockQty" class="form-label fw-bold small text-muted text-uppercase">Initial Stock</label>
+                                        <input asp-for="StockQty" type="number" class="form-control shadow-none" placeholder="0" />
+                                        <span asp-validation-for="StockQty" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RIGHT COLUMN: Media Upload -->
+                            <div class="col-lg-4">
+                                <div class="bg-light rounded-4 p-4 border border-light shadow-sm h-100">
+                                    <h5 class="fw-bold text-dark mb-4 text-center">Featured Image</h5>
+                                    
+                                    <!-- Interactive Upload Area -->
+                                    <div class="upload-container mb-4">
+                                        <label for="imageInput" class="upload-box d-flex flex-column align-items-center justify-content-center">
+                                            <div id="uploadPlaceholder" class="text-center">
+                                                <i class="bi bi-cloud-arrow-up text-primary" style="font-size: 3.5rem;"></i>
+                                                <p class="mt-2 mb-0 fw-bold">Click to Upload</p>
+                                                <p class="text-muted small">JPG, PNG or GIF (Max 2MB)</p>
+                                            </div>
+                                            <img id="imagePreview" src="#" class="img-fluid rounded-3 d-none shadow" alt="Preview">
+                                        </label>
+                                        <!-- Note: Your model property is 'ProudctImage' -->
+                                        <input asp-for="ProudctImage" id="imageInput" type="file" class="d-none" accept="image/*" />
+                                    </div>
+
+                                    <div class="text-center">
+                                        <label for="imageInput" class="btn btn-primary rounded-pill px-4 w-100 mb-2 fw-bold">
+                                            <i class="bi bi-image me-2"></i> Select File
+                                        </label>
+                                        <button type="button" id="removeImage" class="btn btn-link text-danger text-decoration-none small d-none">
+                                            <i class="bi bi-trash me-1"></i> Remove Image
+                                        </button>
+                                        <span asp-validation-for="ProudctImage" class="text-danger d-block mt-2"></span>
+                                    </div>
+
+                                    <div class="mt-4 p-3 bg-white rounded-3 small text-muted border border-light">
+                                        <p class="mb-1"><i class="bi bi-info-circle me-2"></i>Image will be used in the shop and point-of-sale screens.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Footer -->
+                    <div class="card-footer bg-light p-4 d-flex justify-content-end gap-2">
+                        <button type="reset" id="resetBtn" class="btn btn-link text-decoration-none text-muted fw-bold me-3">Reset Form</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-bold shadow">
+                            <i class="bi bi-check-circle-fill me-2"></i> Save Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const removeBtn = document.getElementById('removeImage');
+            const resetBtn = document.getElementById('resetBtn');
+
+            // Handle Image Selection
+            imageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.classList.remove('d-none');
+                        uploadPlaceholder.classList.add('d-none');
+                        removeBtn.classList.remove('d-none');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle Remove Image
+            removeBtn.addEventListener('click', function() {
+                imageInput.value = "";
+                imagePreview.src = "#";
+                imagePreview.classList.add('d-none');
+                uploadPlaceholder.classList.remove('d-none');
+                removeBtn.classList.add('d-none');
+            });
+
+            // Handle Reset
+            resetBtn.addEventListener('click', function() {
+                setTimeout(() => {
+                    removeBtn.click();
+                }, 10);
+            });
+        });
+    </script>
+}
+
+<style>
+    :root {
+        --primary-blue: #4361ee;
+        --secondary-bg: #f8fafc;
+    }
+
+    body {
+        background-color: var(--secondary-bg);
+        color: #334155;
+    }
+
+    .text-slate-800 {
+        color: #1e293b;
+    }
+
+    /* Form Design */
+    .form-control, .form-select, .input-group-text {
+        border-color: #e2e8f0;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control-lg {
+        font-size: 1rem;
+        padding: 0.9rem 1.25rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+    }
+
+    /* Image Upload UI */
+    .upload-box {
+        border: 2px dashed #cbd5e1;
+        border-radius: 20px;
+        min-height: 250px;
+        background: #fff;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        padding: 1rem;
+        width: 100%;
+    }
+
+        .upload-box:hover {
+            border-color: var(--primary-blue);
+            background: #f0f7ff;
+        }
+
+    /* Icons and Buttons */
+    .text-primary {
+        color: var(--primary-blue) !important;
+    }
+    
+    .btn-primary {
+        background-color: var(--primary-blue);
+        border-color: var(--primary-blue);
+    }
+
+        .btn-primary:hover {
+            background-color: #3a0ca3;
+            border-color: #3a0ca3;
+        }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "\F285";
+        font-family: "bootstrap-icons";
+        font-size: 0.7rem;
+        color: #94a3b8;
+    }
+</style>

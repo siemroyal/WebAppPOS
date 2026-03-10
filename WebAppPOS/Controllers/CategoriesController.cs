@@ -108,6 +108,7 @@ namespace WebAppPOS.Controllers
         }
 
         [HttpPost,ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -126,6 +127,5 @@ namespace WebAppPOS.Controllers
             }
             return RedirectToAction("Index");
         }
-
     }
 }
