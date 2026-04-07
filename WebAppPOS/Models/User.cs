@@ -19,5 +19,9 @@ namespace WebAppPOS.Models
         public string? PhotoUrl { get; set; }
         [NotMapped]
         public IFormFile? UserImage { get; set; }
+        // Navigation properties
+        public ICollection<Purchase>? CreatedPurchases { get; set; }
+        public ICollection<Purchase>? UpdatedPurchases { get; set; }
+
     }
 }

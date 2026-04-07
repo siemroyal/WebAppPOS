@@ -34,5 +34,7 @@ namespace WebAppPOS.Models
         public string? PhotoUrl { get; set; }
         [NotMapped]
         public IFormFile? SupplierImage { get; set; }
+        //Navigation Properties
+        public ICollection<Purchase>? Purchases { get; set; }
     }
 }

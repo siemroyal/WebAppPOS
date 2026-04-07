@@ -1,0 +1,152 @@
+﻿@model WebAppPOS.Models.Purchase
+
+<div class="container py-4">
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="PurchaseId" />
+
+        <div class="d-flex justify-content-between mb-4">
+            <h3>Edit Purchase</h3>
+            <a asp-action="Index" class="btn btn-light">Cancel</a>
+        </div>
+
+        <div class="card mb-4 p-4">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label>Purchase No</label>
+                    <input asp-for="PurchaseNo" class="form-control" readonly />
+                </div>
+
+                <div class="col-md-3">
+                    <label>Date</label>
+                    <input asp-for="PurchaseDate" type="date" class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+                    <label>Supplier</label>
+                    <select asp-for="SupplierId" class="form-select">
+                        @foreach (var s in ViewBag.Suppliers)
+                        {
+                            <option value="@s.SupplierId">@s.SupplierName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label>Status</label>
+                    <select asp-for="PurchaseStatus" class="form-select">
+                        <option value="0">Pending</option>
+                        <option value="1">Completed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table" id="itemTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (int i = 0; i < Model.PurchaseDetails.Count; i++)
+                        {
+                            <tr class="item-row">
+                                <td>
+                                    <select name="PurchaseDetails[@i].ProductId" class="form-select product-select">
+                                        @foreach (var p in ViewBag.Products)
+                                        {
+                                            <option value="@p.Id"
+                                                    selected="@(p.Id == Model.PurchaseDetails.ElementAt(i).ProductId)">
+                                                @p.ProductName
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <input type="number" name="PurchaseDetails[@i].StockQty"
+                                           value="@Model.PurchaseDetails.ElementAt(i).Quantity"
+                                           class="form-control qty" />
+                                </td>
+
+                                <td>
+                                    <input type="number" name="PurchaseDetails[@i].Price"
+                                           value="@Model.PurchaseDetails.ElementAt(i).UnitPrice"
+                                           class="form-control price" />
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control row-total" readonly />
+                                </td>
+
+                                <td>
+                                    <button type="button" class="btn btn-danger remove-row">X</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <button type="button" id="addRow" class="btn btn-primary mt-2">Add Row</button>
+            </div>
+        </div>
+
+        <div class="mt-3 text-end">
+            <h4>Total: $<span id="grandTotal">0.00</span></h4>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-2">Update</button>
+
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function calc() {
+            let grand = 0;
+
+            document.querySelectorAll(".item-row").forEach(r => {
+                let q = parseFloat(r.querySelector(".qty").value) || 0;
+                let p = parseFloat(r.querySelector(".price").value) || 0;
+                let t = q * p;
+
+                r.querySelector(".row-total").value = t.toFixed(2);
+                grand += t;
+            });
+
+            document.getElementById("grandTotal").innerText = grand.toFixed(2);
+        }
+
+        document.addEventListener("input", calc);
+
+        document.getElementById("addRow").addEventListener("click", () => {
+            let index = document.querySelectorAll(".item-row").length;
+            let row = document.querySelector(".item-row").cloneNode(true);
+
+            row.querySelectorAll("input, select").forEach(el => {
+                if (el.name)
+                    el.name = el.name.replace(/\[\d+\]/, `[${index}]`);
+                el.value = "";
+            });
+
+            document.querySelector("#itemTable tbody").appendChild(row);
+        });
+
+        document.addEventListener("click", e => {
+            if (e.target.classList.contains("remove-row")) {
+                e.target.closest("tr").remove();
+                calc();
+            }
+        });
+
+        calc();
+    </script>
+}

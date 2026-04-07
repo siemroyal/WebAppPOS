@@ -30,6 +30,8 @@ public class Product
         public int CategoryId { get; set; } //Foriegn Key
         public Category? Category { get; set; } //Navigation Property
         public int UnitId { get; set; } //Foriegn Key
+        //Navigation Property
         public Unit? Unit { get; set; }
+        public ICollection<PurchaseDetail> PurchaseDetails { get; set; } = new List<PurchaseDetail>();
     }
 }
