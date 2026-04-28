@@ -1,0 +1,69 @@
+﻿@model WebAppPOS.Models.Customer
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                <input type="hidden" asp-for="CustomerId" />
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="bg-warning p-4 text-dark border-0 d-flex justify-content-between">
+                        <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Update Customer Profile</h4>
+                        <span class="badge bg-dark rounded-pill py-2 px-3">UID: @Model.CustomerId</span>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row g-4">
+                            <div class="col-md-7">
+                                <h6 class="text-warning fw-bold text-uppercase small border-bottom pb-2 mb-3">Primary Details</h6>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">CUSTOMER NAME</label>
+                                        <input asp-for="CustomerName" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">PHONE</label>
+                                        <input asp-for="Phone" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">TYPE</label>
+                                        <select asp-for="Type" class="form-select">
+                                            <option value="General">General</option>
+                                            <option value="VIP">VIP</option>
+                                            <option value="Wholesale">Wholesale</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">EMAIL</label>
+                                        <input asp-for="Email" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5 border-start ps-md-4">
+                                <h6 class="text-warning fw-bold text-uppercase small border-bottom pb-2 mb-3">Profile Photo</h6>
+                                <div class="text-center mb-3">
+                                    <img id="preview" src="@(string.IsNullOrEmpty(Model.PhotoUrl) ? "/images/no-avatar.png" : "/" + Model.PhotoUrl)"
+                                         class="rounded-circle border border-4 border-white shadow-sm" width="150" height="150" style="object-fit:cover;" />
+                                </div>
+                                <input asp-for="CustomerImage" class="form-control form-control-sm" type="file" id="imgInput" />
+                                <small class="text-muted">Leave empty to keep current photo</small>
+                            </div>
+                        </div>
+                        <div class="mt-5 border-top pt-4 text-end">
+                            <button type="submit" class="btn btn-warning px-5 rounded-pill shadow fw-bold">Update Account</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        imgInput.onchange = evt => {
+            const [file] = imgInput.files
+            if (file) {
+                preview.src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+}

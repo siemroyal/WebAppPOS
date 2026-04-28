@@ -33,5 +33,6 @@ public class Product
         //Navigation Property
         public Unit? Unit { get; set; }
         public ICollection<PurchaseDetail> PurchaseDetails { get; set; } = new List<PurchaseDetail>();
+        //public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
     }
 }

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<WebAppPOS.Models.Order>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Sales Orders</h3>
+            <p class="text-muted small">Track all customer transactions and payment statuses.</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <i class="bi bi-cart-plus me-2"></i>New Sale
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-muted small text-uppercase">Invoice #</th>
+                            <th class="py-3 text-muted small text-uppercase">Customer</th>
+                            <th class="py-3 text-muted small text-uppercase">Date</th>
+                            <th class="py-3 text-muted small text-uppercase">Total</th>
+                            <th class="py-3 text-muted small text-uppercase">Status</th>
+                            <th class="py-3 text-muted small text-uppercase text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-primary">#@item.InvoiceNo</td>
+                                <td>
+                                    <div class="fw-bold text-dark">@item.Customer?.CustomerName</div>
+                                    <small class="text-muted">@item.PaymentType</small>
+                                </td>
+                                <td class="small text-muted">@item.OrderDate.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                <td>
+                                    <div class="fw-bold">$@item.Total.ToString("N2")</div>
+                                    @if (item.Due > 0)
+                                    {
+                                        <small class="text-danger">Due: $@item.Due</small>
+                                    }
+                                    else
+                                    {
+                                        <small class="text-success text-uppercase" style="font-size:10px">Fully Paid</small>
+                                    }
+                                </td>
+                                <td>
+                                    @switch (item.OrderStatus)
+                                    {
+                                        case WebAppPOS.Models.Enums.OrderStatus.Completed:
+                                            <span class="badge bg-success-subtle text-success rounded-pill px-3">Completed</span>
+                                            break;
+                                        case WebAppPOS.Models.Enums.OrderStatus.Pending:
+                                            <span class="badge bg-warning-subtle text-warning rounded-pill px-3">Pending</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3">@item.OrderStatus</span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="dropdown">
+                                        <button class="btn btn-light btn-sm rounded-circle" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                            <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.OrderId"><i class="bi bi-receipt me-2 text-info"></i> View Invoice</a></li>
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.OrderId"><i class="bi bi-pencil me-2 text-warning"></i> Edit Order</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form asp-action="Delete" asp-route-id="@item.OrderId" method="post" onsubmit="return confirm('Cancel this order?')">
+                                                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-x-circle me-2"></i> Cancel Order</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -55,7 +55,7 @@ namespace WebAppPOS.Controllers
 
             return View(purchase);
         }
-
+        [HttpGet]
         public IActionResult Create() {
             var count = _context.Purchases.Count() + 1;
             ViewBag.PurchaseNo = "PUR-" + count.ToString("D4");
@@ -80,7 +80,6 @@ namespace WebAppPOS.Controllers
                         PurchaseStatus = model.PurchaseStatus,
                         CreatedBy = 1
                     };
-
                     _context.Purchases.Add(purchase);
                     await _context.SaveChangesAsync();
 
@@ -95,7 +94,6 @@ namespace WebAppPOS.Controllers
                         };
                         _context.PurchaseDetails.Add(detail);
                     }
-
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     return RedirectToAction("Index");

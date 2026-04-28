@@ -1,0 +1,42 @@
+﻿@model WebAppPOS.Models.Customer
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="bg-primary" style="height: 120px;"></div>
+                <div class="card-body p-4 text-center" style="margin-top: -75px;">
+                    <img src="@(string.IsNullOrEmpty(Model.PhotoUrl) ? "https://ui-avatars.com/api/?size=256&name=" + Model.CustomerName : "/" + Model.PhotoUrl)"
+                         class="rounded-circle border border-4 border-white shadow mb-3" width="150" height="150" style="object-fit: cover;" />
+
+                    <h3 class="fw-bold mb-1">@Model.CustomerName</h3>
+                    <span class="badge bg-info-subtle text-info rounded-pill px-4 mb-4">@Model.Type</span>
+
+                    <div class="row g-4 text-start mt-2">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 h-100">
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-2">Contact Details</label>
+                                <div class="mb-2"><i class="bi bi-telephone me-2 text-primary"></i> @Model.Phone</div>
+                                <div class="mb-2"><i class="bi bi-envelope me-2 text-primary"></i> @Model.Email</div>
+                                <div><i class="bi bi-geo-alt me-2 text-primary"></i> @Model.Address</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 h-100">
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-2">Financial Info</label>
+                                <div class="mb-2"><strong>Bank:</strong> @Model.BankName</div>
+                                <div class="mb-2"><strong>Holder:</strong> @Model.AccountHolder</div>
+                                <div><strong>A/C:</strong> @Model.AccountNumber</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 d-flex gap-2 justify-content-center">
+                        <a asp-action="Index" class="btn btn-light rounded-pill border px-4">Back to List</a>
+                        <a asp-action="Edit" asp-route-id="@Model.CustomerId" class="btn btn-warning rounded-pill px-4 text-dark fw-bold">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

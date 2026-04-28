@@ -1,0 +1,182 @@
+﻿@model WebAppPOS.Models.Order
+
+<div class="container-fluid py-4">
+    <form asp-action="Create" id="orderForm" method="post">
+        <div class="row g-4">
+            <!-- Left Side: Invoice Items -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white py-3 border-0">
+                        <h5 class="fw-bold text-primary mb-0">Cart Items</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table align-middle mb-0" id="productTable">
+                            <thead class="bg-light small text-muted">
+                                <tr>
+                                    <th class="ps-4">PRODUCT</th>
+                                    <th style="width:120px">QTY</th>
+                                    <th style="width:150px">PRICE</th>
+                                    <th style="width:150px">TOTAL</th>
+                                    <th style="width:50px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="item-row">
+                                    <td class="ps-4">
+                                        <select name="OrderDetails[0].ProductId" class="form-select border-0 bg-light product-select" required>
+                                            <option value="">Choose item...</option>
+                                            @foreach (var p in ViewBag.Products)
+                                            {
+                                                <option value="@p.Id" data-price="@p.Price">@p.ProductName</option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td><input name="OrderDetails[0].Quantity" type="number" class="form-control border-0 bg-light qty-input" value="1" min="1" /></td>
+                                    <td><input name="OrderDetails[0].Unitcost" type="number" class="form-control border-0 bg-light price-input" step="0.01" /></td>
+                                    <td class="fw-bold text-dark line-total">$0.00</td>
+                                    <td class="pe-3"><button type="button" class="btn btn-link text-danger remove-row p-0"><i class="bi bi-trash"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer bg-white border-0 py-3">
+                        <button type="button" id="addRow" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                            <i class="bi bi-plus-lg me-1"></i> Add Another Product
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Order Summary -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top:20px">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4 border-bottom pb-2">Order Summary</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">CUSTOMER</label>
+                            <select asp-for="CustomerId" class="form-select" required>
+                                <option value="">Select Customer</option>
+                                @foreach (var c in ViewBag.Customers)
+                                {
+                                    <option value="@c.CustomerId">@c.CustomerName</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-muted">INVOICE NO</label>
+                                <input asp-for="InvoiceNo" class="form-control bg-light" value="@ViewBag.InvoiceNo" readonly />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-muted">PAYMENT</label>
+                                <select asp-for="PaymentType" class="form-select">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Card">Card</option>
+                                    <option value="Online">Online</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Sub Total</span>
+                            <span id="subTotal">$0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 align-items-center">
+                            <span class="text-muted">VAT (%)</span>
+                            <input asp-for="Var" id="vatInput" class="form-control form-control-sm text-end w-25" value="0" />
+                        </div>
+                        <div class="d-flex justify-content-between border-top pt-3 mb-4">
+                            <h4 class="fw-bold">Total</h4>
+                            <h4 id="grandTotal" class="text-primary fw-bold">$0.00</h4>
+                        </div>
+
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-muted">PAY AMOUNT</label>
+                                <input asp-for="Pay" id="payInput" class="form-control" value="0" />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-muted">DUE AMOUNT</label>
+                                <input asp-for="Due" id="dueInput" class="form-control bg-light" readonly />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill shadow">PROCESS SALE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden fields for calculated data -->
+        <input type="hidden" asp-for="SubTotal" id="hiddenSubTotal" />
+        <input type="hidden" asp-for="Total" id="hiddenTotal" />
+        <input type="hidden" asp-for="TotalProducts" id="hiddenTotalQty" />
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function calculate() {
+            let sub = 0;
+            let totalQty = 0;
+
+            $(".item-row").each(function() {
+                let qty = parseFloat($(this).find(".qty-input").val()) || 0;
+                let price = parseFloat($(this).find(".price-input").val()) || 0;
+                let lineTotal = qty * price;
+                $(this).find(".line-total").text("$" + lineTotal.toFixed(2));
+                sub += lineTotal;
+                totalQty += qty;
+            });
+
+            let vatPercent = parseFloat($("#vatInput").val()) || 0;
+            let grand = sub + (sub * (vatPercent / 100));
+            let pay = parseFloat($("#payInput").val()) || 0;
+            let due = grand - pay;
+
+            $("#subTotal").text("$" + sub.toFixed(2));
+            $("#grandTotal").text("$" + grand.toFixed(2));
+            $("#dueInput").val(due.toFixed(2));
+
+            // Set hidden values for server
+            $("#hiddenSubTotal").val(sub.toFixed(0));
+            $("#hiddenTotal").val(grand.toFixed(0));
+            $("#hiddenTotalQty").val(totalQty);
+        }
+
+        $(document).on("change", ".product-select", function() {
+            let price = $(this).find(":selected").data("price");
+            $(this).closest("tr").find(".price-input").val(price);
+            calculate();
+        });
+
+        $(document).on("input", ".qty-input, .price-input, #vatInput, #payInput", calculate);
+
+        $("#addRow").click(function() {
+            let count = $(".item-row").length;
+            let newRow = $(".item-row:first").clone();
+            newRow.find("input").val("");
+            newRow.find(".qty-input").val(1);
+            newRow.find(".line-total").text("$0.00");
+
+            // Correct the names for binding List<OrderDetail>
+            newRow.find("select, input").each(function() {
+                let name = $(this).attr("name").replace(/\[\d+\]/, "[" + count + "]");
+                $(this).attr("name", name);
+            });
+
+            $("#productTable tbody").append(newRow);
+        });
+
+        $(document).on("click", ".remove-row", function() {
+            if ($(".item-row").length > 1) {
+                $(this).closest("tr").remove();
+                calculate();
+            }
+        });
+    </script>
+}

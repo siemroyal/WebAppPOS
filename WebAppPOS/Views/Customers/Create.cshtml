@@ -1,0 +1,85 @@
+﻿@model WebAppPOS.Models.Customer
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary p-4 text-white border-0">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-person-plus me-2"></i>Register New Customer</h4>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" enctype="multipart/form-data" method="post">
+                        <div class="row g-4">
+                            <!-- Left: Personal Info -->
+                            <div class="col-md-7">
+                                <h6 class="text-primary fw-bold text-uppercase small border-bottom pb-2 mb-3">Personal Information</h6>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">FULL NAME</label>
+                                        <input asp-for="CustomerName" class="form-control bg-light border-0 py-2" placeholder="John Doe" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">PHONE NUMBER</label>
+                                        <input asp-for="Phone" class="form-control bg-light border-0 py-2" placeholder="012345678" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">CUSTOMER TYPE</label>
+                                        <select asp-for="Type" class="form-select bg-light border-0 py-2">
+                                            <option value="General">General</option>
+                                            <option value="VIP">VIP / Regular</option>
+                                            <option value="Wholesale">Wholesale</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">EMAIL ADDRESS</label>
+                                        <input asp-for="Email" class="form-control bg-light border-0 py-2" placeholder="client@example.com" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">ADDRESS</label>
+                                        <textarea asp-for="Address" class="form-control bg-light border-0 py-2" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Financials & Photo -->
+                            <div class="col-md-5 border-start ps-md-4">
+                                <h6 class="text-primary fw-bold text-uppercase small border-bottom pb-2 mb-3">Finance & Photo</h6>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small">BANK NAME</label>
+                                    <input asp-for="BankName" class="form-control bg-light border-0" />
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small">ACCOUNT NUMBER</label>
+                                    <input asp-for="AccountNumber" class="form-control bg-light border-0" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small">PROFILE IMAGE</label>
+                                    <input asp-for="CustomerImage" class="form-control" type="file" id="imgInput" />
+                                    <div class="mt-3 text-center">
+                                        <img id="preview" src="https://ui-avatars.com/api/?name=New+User&size=128" class="rounded-4 shadow-sm border" width="120" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 border-top pt-4 d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-light rounded-pill px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 shadow">Save Customer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        imgInput.onchange = evt => {
+            const [file] = imgInput.files
+            if (file) {
+                preview.src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+}
